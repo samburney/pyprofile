@@ -68,14 +68,13 @@ with conn:
         f'          FROM cells, line\n'
         f'          ORDER BY distance\n'
         f'      )\n'
-        f'  SELECT distance, ST_Z(geom) as y FROM points3d\n'
+        f'  SELECT ST_Y(ST_Transform(geom, {coord_srid})) as lat, ST_X(ST_Transform(geom, {coord_srid})) as lng, distance, ST_Z(geom) as elevation FROM points3d\n'
     )
     print(sql)
     cursor = conn.cursor()
     with cursor:
         cursor.execute(sql)
         profile_points = cursor.fetchall()
-
         print(profile_points)
 
     # Get elevation of a regular sample of intersections along a line
@@ -108,7 +107,7 @@ with conn:
         f'          FROM cells, line\n'
         f'          ORDER BY distance\n'
         f'      )\n'
-        f'  SELECT distance, ST_Z(geom) as y FROM points3d\n'
+        f'  SELECT ST_Y(ST_Transform(geom, {coord_srid})) as lat, ST_X(ST_Transform(geom, {coord_srid})) as lng, distance, ST_Z(geom) as elevation FROM points3d\n'
     )
     print(sql)
     cursor = conn.cursor()
