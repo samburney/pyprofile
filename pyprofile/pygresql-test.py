@@ -80,7 +80,7 @@ with conn:
     # Get elevation of a regular sample of intersections along a line
     coords_a = coords[0]
     coords_b = coords[-1]
-    samples = 25
+    sample_distance = 5
 
     sql = (
         f'WITH\n'
@@ -92,7 +92,7 @@ with conn:
         f'  ),\n'
         f'  linemeasure AS\n'
         f'     (SELECT ST_AddMeasure(line.geom, 0, ST_Length(line.geom)) AS linem,\n'
-        f'             generate_series(0, ST_Length(line.geom)::int, {samples}) AS sample\n'
+        f'             generate_series(0, ST_Length(line.geom)::int, {sample_distance}) AS sample\n'
         f'      FROM line),\n'
         f'  points2d AS\n'
         f'    (SELECT ST_GeometryN(ST_LocateAlong(linem, sample), 1) AS geom FROM linemeasure),\n'
