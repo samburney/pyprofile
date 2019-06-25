@@ -60,8 +60,8 @@ def get_point(coord_lat, coord_lng, coord_srid):
 
 
 # Get the elevation of a single point
-def get_elevation(coord_lat, coord_lng, coord_srid):
-    point = get_point(coord_lat, coord_lng, coord_srid)
+def get_elevation(lat, lng, srid):
+    point = get_point(lat, lng, srid)
 
     query = db.session.query(Elevation.rast.ST_Value(point)
                              ).filter(Elevation.rast.ST_Intersects(point))
@@ -69,3 +69,32 @@ def get_elevation(coord_lat, coord_lng, coord_srid):
     elevation = result[0]
 
     return elevation
+
+
+# Get elevation profile
+def get_elevation_profile(coords, srid):
+    coords_a = coords[0]
+    coords_b = coords[-1]
+
+    point_a = get_point(*coords_a, srid)
+    point_b = get_point(*coords_b, srid)
+
+    dem_srid = get_srid()
+
+    # Make a line
+    query = db.session.query(db.func.ST_Makeline(point_a, point_b))
+    result = query.first()
+    if result:
+        line = result[0]
+
+    print(line)
+
+    # Get the elevation for every intersected cell on the line
+    query = db.session.query(
+        db.func.ST_Centroid(
+            db.func.ST_Intersection(Elevation.rast, line),
+            
+        )
+    )
+
+    return
