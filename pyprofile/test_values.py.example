@@ -1,0 +1,7 @@
+# SRID for WGS 84 is 4326
+# https://spatialreference.org/ref/epsg/wgs-84/
+coord_srid = 4326
+
+# Example coordinates are for the Adelaide, South Australia CBD
+coord_lat = -34.9284989
+coord_lng = 138.6007456

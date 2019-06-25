@@ -1,0 +1,6 @@
+# PostGIS config
+POSTGIS_HOST = 'localhost'
+POSTGIS_PORT = 5432
+POSTGIS_USERNAME = 'postgis'
+POSTGIS_PASSWORD = 'password'
+POSTGIS_DATABASE = 'postgis'
