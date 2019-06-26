@@ -1,3 +1,4 @@
+import math
 from flask import current_app as app
 from geographiclib.geodesic import Geodesic
 
@@ -21,3 +22,10 @@ def get_distance(coord_a, coord_b):
     distance = geodesic['s12']
 
     return distance
+
+
+# Convert Radians to Degrees
+def rad2deg(rad):
+    deg = rad * 180 / math.pi
+
+    return deg
