@@ -24,7 +24,7 @@ with app.app_context():
         f'Elevation: {elevation} m\n'
     )
 
-    # A to B profile test
+    # A to B profile test (Sampled)
     coords = (test_values.profile_coords[0], test_values.profile_coords[-1])
     sample_dist = test_values.sample_dist
     computed_distance = functions.get_distance(*coords)
@@ -45,4 +45,21 @@ with app.app_context():
         f'DEM Bearing: {dem_bearing} degrees\n'
         f'Start elevation: {elevation_profile_sampled[0].lat}, {elevation_profile_sampled[0].lng}, {elevation_profile_sampled[0].distance:.2f}, {elevation_profile_sampled[0].elevation:.2f}\n'
         f'End elevation: {elevation_profile_sampled[-1].lat}, {elevation_profile_sampled[-1].lng}, {elevation_profile_sampled[-1].distance:.2f}, {elevation_profile_sampled[-1].elevation:.2f}\n'
+    )
+
+    # A to B profile test (Full resolution)
+    elevation_profile = dem.get_elevation_profile(coords, coord_srid)
+
+    print(
+        f'A to B profile test (Full Resolution)\n'
+        f'-------------------------------------\n'
+        f'A: {coords[0]}\n'
+        f'B: {coords[1]}\n'
+        f'Points sampled: {len(elevation_profile)}\n'
+        f'Computed Distance: {computed_distance} m\n'
+        f'DEM Distance: {dem_distance} m\n'
+        f'Computed Bearing: {computed_bearing} degrees\n'
+        f'DEM Bearing: {dem_bearing} degrees\n'
+        f'Start elevation: {elevation_profile[0].lat}, {elevation_profile[0].lng}, {elevation_profile[0].distance:.2f}, {elevation_profile[0].elevation:.2f}\n'
+        f'End elevation: {elevation_profile[-1].lat}, {elevation_profile[-1].lng}, {elevation_profile[-1].distance:.2f}, {elevation_profile[-1].elevation:.2f}\n'
     )

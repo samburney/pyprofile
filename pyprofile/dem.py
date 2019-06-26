@@ -1,5 +1,6 @@
 from flask_sqlalchemy import SQLAlchemy
-from geoalchemy2 import Raster
+from geoalchemy2 import Raster, Geometry
+import geoalchemy2.types
 
 
 # Initialise database object
@@ -23,6 +24,11 @@ class Elevation(db.Model):
             dem_srid = result.srid
 
         return dem_srid
+
+
+# Custom SQLAlchemy Data Types
+class GeomvalType(geoalchemy2.types.CompositeType):
+    typemap = {'geom': Geometry('MULTIPOLYGON'), 'val': db.Float}
 
 
 # Helper functions
@@ -74,7 +80,65 @@ def get_elevation(lat, lng, srid):
     return elevation
 
 
-# Get elevation profile
+# Get an elevation profile
+def get_elevation_profile(coords, srid):
+    elevations = None
+    dem_srid = get_srid()
+
+    # Get first and last coordinate and make a PostGIS point for each
+    coords_a = coords[0]
+    coords_b = coords[-1]
+    point_a = get_point(*coords_a, srid)
+    point_b = get_point(*coords_b, srid)
+
+    # Build a series of subqueries which will combine together to return a path profile
+    # Make a line from point_a to point_b
+    line = db.select([db.func.ST_MakeLine(point_a, point_b).label('geom')]).cte('line')
+
+    # Find the coordinates of each DEM cell line intersects with
+    intersection_geomvals = db.select([
+        db.type_coerce(Elevation.rast.ST_Intersection(line.c.geom), GeomvalType()).label('geomval')
+    ]).where(Elevation.rast.ST_Intersects(line.c.geom)).cte('intersection_geomvals')
+    intersection_geomvals_q = db.session.query(intersection_geomvals)
+
+    # Get values for each coordinate
+    intersections = db.select([
+        db.func.ST_Centroid(
+            intersection_geomvals_q.subquery().c.geomval.geom
+        ).label('geom'),
+        intersection_geomvals_q.subquery().c.geomval.val.label('val')
+    ]).cte('intersections')
+
+    # Create a 3D point with the elevation on the Z axis
+    profile_points = db.select([
+        db.func.ST_SetSRID(
+            db.func.ST_MakePoint(
+                db.func.ST_X(intersections.c.geom),
+                db.func.ST_Y(intersections.c.geom),
+                intersections.c.val
+            ),
+            dem_srid
+        ).label('geom'),
+        db.func.ST_Distance(
+            db.func.ST_StartPoint(line.c.geom), intersections.c.geom
+        ).label('distance')
+    ]).order_by('distance').cte('profile_points')
+
+    # Build query and get elevation data
+    query = db.session.query(
+        db.func.ST_Y(db.func.ST_Transform(profile_points.c.geom, srid)).label('lat'),
+        db.func.ST_X(db.func.ST_Transform(profile_points.c.geom, srid)).label('lng'),
+        profile_points.c.distance.label('distance'),
+        db.func.ST_Z(profile_points.c.geom).label('elevation'),
+    )
+    result = query.all()
+    if result:
+        elevations = result
+
+    return elevations
+
+
+# Get a distance sampled elevation profile
 def get_elevation_profile_sampled(coords, srid, sample_dist):
     elevations = None
     dem_srid = get_srid()
