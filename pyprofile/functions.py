@@ -29,3 +29,11 @@ def rad2deg(rad):
     deg = rad * 180 / math.pi
 
     return deg
+
+
+# Enable 'dot' access to dict keys
+class dotdict(dict):
+    """dot.notation access to dictionary attributes"""
+    __getattr__ = dict.get
+    __setattr__ = dict.__setitem__
+    __delattr__ = dict.__delitem__

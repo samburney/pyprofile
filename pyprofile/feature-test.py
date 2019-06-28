@@ -57,37 +57,39 @@ def main():
         dem_bearing = backend.get_bearing(*coords, coord_srid)
         elevation_profile_sampled = backend.get_elevation_profile_sampled(coords, coord_srid, sample_dist)
 
-        print(
-            f'A to B profile test (Sampled)\n'
-            f'-----------------------------\n'
-            f'A: {coords[0]}\n'
-            f'B: {coords[1]}\n'
-            f'Points sampled: {len(elevation_profile_sampled)}\n'
-            f'Computed Distance: {computed_distance} m\n'
-            f'DEM Distance: {dem_distance} m\n'
-            f'Computed Bearing: {computed_bearing} degrees\n'
-            f'DEM Bearing: {dem_bearing} degrees\n'
-            f'Start elevation: {elevation_profile_sampled[0].lat}, {elevation_profile_sampled[0].lng}, {elevation_profile_sampled[0].distance:.2f}, {elevation_profile_sampled[0].elevation:.2f}\n'
-            f'End elevation: {elevation_profile_sampled[-1].lat}, {elevation_profile_sampled[-1].lng}, {elevation_profile_sampled[-1].distance:.2f}, {elevation_profile_sampled[-1].elevation:.2f}\n'
-        )
+        if elevation_profile_sampled:
+            print(
+                f'A to B profile test (Sampled)\n'
+                f'-----------------------------\n'
+                f'A: {coords[0]}\n'
+                f'B: {coords[1]}\n'
+                f'Points sampled: {len(elevation_profile_sampled)}\n'
+                f'Computed Distance: {computed_distance} m\n'
+                f'DEM Distance: {dem_distance} m\n'
+                f'Computed Bearing: {computed_bearing} degrees\n'
+                f'DEM Bearing: {dem_bearing} degrees\n'
+                f'Start elevation: {elevation_profile_sampled[0].lat}, {elevation_profile_sampled[0].lng}, {elevation_profile_sampled[0].distance:.2f}, {elevation_profile_sampled[0].elevation:.2f}\n'
+                f'End elevation: {elevation_profile_sampled[-1].lat}, {elevation_profile_sampled[-1].lng}, {elevation_profile_sampled[-1].distance:.2f}, {elevation_profile_sampled[-1].elevation:.2f}\n'
+            )
 
         # A to B profile test (Full resolution)
         if args.test_full_resolution:
             elevation_profile = backend.get_elevation_profile(coords, coord_srid)
 
-            print(
-                f'A to B profile test (Full Resolution)\n'
-                f'-------------------------------------\n'
-                f'A: {coords[0]}\n'
-                f'B: {coords[1]}\n'
-                f'Points sampled: {len(elevation_profile)}\n'
-                f'Computed Distance: {computed_distance} m\n'
-                f'DEM Distance: {dem_distance} m\n'
-                f'Computed Bearing: {computed_bearing} degrees\n'
-                f'DEM Bearing: {dem_bearing} degrees\n'
-                f'Start elevation: {elevation_profile[0].lat}, {elevation_profile[0].lng}, {elevation_profile[0].distance:.2f}, {elevation_profile[0].elevation:.2f}\n'
-                f'End elevation: {elevation_profile[-1].lat}, {elevation_profile[-1].lng}, {elevation_profile[-1].distance:.2f}, {elevation_profile[-1].elevation:.2f}\n'
-            )
+            if elevation_profile:
+                print(
+                    f'A to B profile test (Full Resolution)\n'
+                    f'-------------------------------------\n'
+                    f'A: {coords[0]}\n'
+                    f'B: {coords[1]}\n'
+                    f'Points sampled: {len(elevation_profile)}\n'
+                    f'Computed Distance: {computed_distance} m\n'
+                    f'DEM Distance: {dem_distance} m\n'
+                    f'Computed Bearing: {computed_bearing} degrees\n'
+                    f'DEM Bearing: {dem_bearing} degrees\n'
+                    f'Start elevation: {elevation_profile[0].lat}, {elevation_profile[0].lng}, {elevation_profile[0].distance:.2f}, {elevation_profile[0].elevation:.2f}\n'
+                    f'End elevation: {elevation_profile[-1].lat}, {elevation_profile[-1].lng}, {elevation_profile[-1].distance:.2f}, {elevation_profile[-1].elevation:.2f}\n'
+                )
 
 
 # Entrypoint

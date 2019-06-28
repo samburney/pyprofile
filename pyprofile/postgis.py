@@ -158,7 +158,7 @@ def get_elevation_profile(coords, srid):
 
 
 # Get a distance sampled elevation profile
-def get_elevation_profile_sampled(coords, srid, sample_dist):
+def get_elevation_profile_sampled(coords, srid, sample_dist=5):
     elevations = None
     dem_srid = get_srid()
 

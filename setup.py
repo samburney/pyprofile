@@ -6,6 +6,7 @@ requires = [
     'GeoAlchemy2',
     'geographiclib',
     'argparse',
+    'googlemaps',
 ]
 
 setup(
