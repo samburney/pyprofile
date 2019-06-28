@@ -4,10 +4,6 @@
 def init_app(app):
     return
 
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
 # Helper functions
 # Get table SRID value
 def get_srid():
