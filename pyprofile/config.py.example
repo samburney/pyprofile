@@ -1,4 +1,5 @@
-# PostGIS config
+# postgis Backend Config
+POSTGIS_DRIVER = 'postgresql'
 POSTGIS_HOST = 'localhost'
 POSTGIS_PORT = 5432
 POSTGIS_USERNAME = 'postgis'

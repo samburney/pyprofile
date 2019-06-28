@@ -1,10 +1,29 @@
 from flask_sqlalchemy import SQLAlchemy
+import sqlalchemy
 from geoalchemy2 import Raster, Geometry
 import geoalchemy2.types
 
 
 # Initialise database object
 db = SQLAlchemy()
+
+
+# Handle Flask App Initialisation
+def init_app(app):
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+    # Initialise POSTGIS DEM DB
+    if not app.config.get('SQLALCHEMY_DATABASE_URI', None):
+        app.config['SQLALCHEMY_DATABASE_URI'] = sqlalchemy.engine.url.URL(
+            app.config['POSTGIS_DRIVER'],
+            host=app.config['POSTGIS_HOST'],
+            port=app.config['POSTGIS_PORT'],
+            database=app.config['POSTGIS_DATABASE'],
+            username=app.config['POSTGIS_USERNAME'],
+            password=app.config['POSTGIS_PASSWORD'],
+        )
+
+    db.init_app(app)
 
 
 # Define table(s)

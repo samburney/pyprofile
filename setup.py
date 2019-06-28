@@ -5,6 +5,7 @@ requires = [
     'flask_sqlalchemy',
     'GeoAlchemy2',
     'geographiclib',
+    'argparse',
 ]
 
 setup(
