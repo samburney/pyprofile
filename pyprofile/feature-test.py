@@ -69,8 +69,10 @@ def main():
                 f'DEM Distance: {dem_distance} m\n'
                 f'Computed Bearing: {computed_bearing} degrees\n'
                 f'DEM Bearing: {dem_bearing} degrees\n'
-                f'Start elevation: {elevation_profile_sampled[0].lat}, {elevation_profile_sampled[0].lng}, {elevation_profile_sampled[0].distance:.2f}, {elevation_profile_sampled[0].elevation:.2f}\n'
-                f'End elevation: {elevation_profile_sampled[-1].lat}, {elevation_profile_sampled[-1].lng}, {elevation_profile_sampled[-1].distance:.2f}, {elevation_profile_sampled[-1].elevation:.2f}\n'
+                f'Start elevation: {elevation_profile_sampled[0].lat}, {elevation_profile_sampled[0].lng},'
+                f' {elevation_profile_sampled[0].distance:.2f}, {elevation_profile_sampled[0].elevation:.2f}\n'
+                f'End elevation: {elevation_profile_sampled[-1].lat}, {elevation_profile_sampled[-1].lng},'
+                f' {elevation_profile_sampled[-1].distance:.2f}, {elevation_profile_sampled[-1].elevation:.2f}\n'
             )
 
         # A to B profile test (Full resolution)
@@ -88,8 +90,10 @@ def main():
                     f'DEM Distance: {dem_distance} m\n'
                     f'Computed Bearing: {computed_bearing} degrees\n'
                     f'DEM Bearing: {dem_bearing} degrees\n'
-                    f'Start elevation: {elevation_profile[0].lat}, {elevation_profile[0].lng}, {elevation_profile[0].distance:.2f}, {elevation_profile[0].elevation:.2f}\n'
-                    f'End elevation: {elevation_profile[-1].lat}, {elevation_profile[-1].lng}, {elevation_profile[-1].distance:.2f}, {elevation_profile[-1].elevation:.2f}\n'
+                    f'Start elevation: {elevation_profile[0].lat}, {elevation_profile[0].lng},'
+                    f' {elevation_profile[0].distance:.2f}, {elevation_profile[0].elevation:.2f}\n'
+                    f'End elevation: {elevation_profile[-1].lat}, {elevation_profile[-1].lng},'
+                    f' {elevation_profile[-1].distance:.2f}, {elevation_profile[-1].elevation:.2f}\n'
                 )
 
 

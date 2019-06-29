@@ -1,15 +1,13 @@
 import math
 
-from flask import g
+from flask import current_app
 import googlemaps
 
-import functions
+import pyprofile.functions as functions
 
 
 # Handle Flask App Initialisation
 def init_app(app):
-    g.gmaps = googlemaps.Client(key=app.config['GOOGLE_MAPS_API_KEY'])
-
     return
 
 
@@ -22,17 +20,24 @@ def get_srid():
 
 # Get the elevation of a single point
 def get_elevation(lat, lng, srid=get_srid()):
+    gmaps = googlemaps.Client(key=current_app.config['GOOGLE_MAPS_API_KEY'])
     elevation = None
 
-    result = g.gmaps.elevation((lat, lng))
+    result = gmaps.elevation((lat, lng))
     if result:
-        elevation = result[0]['elevation']
+        elevation = {
+            'lat': result[0]['location']['lat'],
+            'lng': result[0]['location']['lng'],
+            'elevation': result[0]['elevation'],
+        }
+        elevation = functions.dotdict(elevation)
 
     return elevation
 
 
 # Get an elevation profile
 def get_elevation_profile(coords, srid=get_srid()):
+    gmaps = googlemaps.Client(key=current_app.config['GOOGLE_MAPS_API_KEY'])
     elevations = None
     max_samples = 512
 
@@ -41,7 +46,7 @@ def get_elevation_profile(coords, srid=get_srid()):
     coord_b = coords[-1]
 
     # Make API request
-    result = g.gmaps.elevation_along_path([coord_a, coord_b], max_samples)
+    result = gmaps.elevation_along_path([coord_a, coord_b], max_samples)
     if result:
         elevations = []
         for r in result:
@@ -58,6 +63,7 @@ def get_elevation_profile(coords, srid=get_srid()):
 
 # Get a distance sampled elevation profile
 def get_elevation_profile_sampled(coords, srid=get_srid(), sample_dist=5):
+    gmaps = googlemaps.Client(key=current_app.config['GOOGLE_MAPS_API_KEY'])
     elevations = None
     max_samples = 512
 
@@ -73,7 +79,7 @@ def get_elevation_profile_sampled(coords, srid=get_srid(), sample_dist=5):
         samples = max_samples
 
     # Make API request
-    result = g.gmaps.elevation_along_path([coord_a, coord_b], samples)
+    result = gmaps.elevation_along_path([coord_a, coord_b], samples)
     if result:
         elevations = []
         for r in result:

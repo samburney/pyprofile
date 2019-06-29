@@ -7,6 +7,7 @@ requires = [
     'geographiclib',
     'argparse',
     'googlemaps',
+    'geojson',
 ]
 
 setup(

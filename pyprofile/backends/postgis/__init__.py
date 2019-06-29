@@ -3,6 +3,7 @@ import sqlalchemy
 from geoalchemy2 import Raster, Geometry
 import geoalchemy2.types
 
+from pyprofile.functions import dotdict
 
 # Initialise database object
 db = SQLAlchemy()
@@ -94,7 +95,12 @@ def get_elevation(lat, lng, srid):
     ).filter(Elevation.rast.ST_Intersects(point))
     result = query.first()
     if result:
-        elevation = result.elevation
+        elevation = {
+            'lat': lat,
+            'lng': lng,
+            'elevation': result.elevation
+        }
+        elevation = dotdict(elevation)
 
     return elevation
 

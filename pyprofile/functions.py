@@ -1,11 +1,14 @@
 import math
-from flask import current_app as app
+import os
+import re
+import importlib
+from flask import current_app
 from geographiclib.geodesic import Geodesic
 
 
 # Quick log function
 def log(var):
-    app.logger.info(var)
+    current_app.logger.info(var)
 
 
 # Determine bearing between two coordinates
@@ -29,6 +32,18 @@ def rad2deg(rad):
     deg = rad * 180 / math.pi
 
     return deg
+
+
+# Import and initialise pyprofile backends
+def get_backends():
+    backends = {}
+    with os.scandir('pyprofile/backends') as backend_dirs:
+        for backend_dir in backend_dirs:
+            if not re.match(r'\.|_', backend_dir.name) and backend_dir.is_dir():
+                backend = importlib.import_module(f'pyprofile.backends.{backend_dir.name}')
+                backends[backend_dir.name] = backend
+
+    return backends
 
 
 # Enable 'dot' access to dict keys
