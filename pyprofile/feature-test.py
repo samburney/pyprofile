@@ -1,4 +1,5 @@
 import argparse
+import importlib
 from pyprofile import create_app, functions
 
 import test_values
@@ -21,7 +22,7 @@ def main():
     args = parse_args()
 
     # Import chosen backend
-    backend = __import__(args.backend, fromlist=[''])
+    backend = importlib.import_module(f'backends.{args.backend}')
 
     # Create app
     app = create_app()
