@@ -37,7 +37,8 @@ def rad2deg(rad):
 # Import and initialise pyprofile backends
 def get_backends():
     backends = {}
-    with os.scandir('pyprofile/backends') as backend_dirs:
+    script_root = os.path.dirname(os.path.realpath(__file__))
+    with os.scandir(f'{script_root}{os.sep}backends') as backend_dirs:
         for backend_dir in backend_dirs:
             if not re.match(r'\.|_', backend_dir.name) and backend_dir.is_dir():
                 backend = importlib.import_module(f'pyprofile.backends.{backend_dir.name}')

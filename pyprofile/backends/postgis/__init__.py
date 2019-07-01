@@ -147,14 +147,14 @@ def get_elevation_profile(coords, srid):
         db.func.ST_Distance(
             db.func.ST_StartPoint(line.c.geom), intersections.c.geom
         ).label('distance')
-    ]).order_by('distance').cte('profile_points')
+    ]).order_by('distance').distinct('distance').cte('profile_points')
 
     # Build query and get elevation data
     query = db.session.query(
-        db.func.ST_Y(db.func.ST_Transform(profile_points.c.geom, srid)).label('lat'),
         db.func.ST_X(db.func.ST_Transform(profile_points.c.geom, srid)).label('lng'),
-        profile_points.c.distance.label('distance'),
+        db.func.ST_Y(db.func.ST_Transform(profile_points.c.geom, srid)).label('lat'),
         db.func.ST_Z(profile_points.c.geom).label('elevation'),
+        profile_points.c.distance.label('distance'),
     )
     result = query.all()
     if result:
@@ -218,10 +218,10 @@ def get_elevation_profile_sampled(coords, srid, sample_dist=5):
 
     # Build query and get elevation data
     query = db.session.query(
-        db.func.ST_Y(db.func.ST_Transform(profile_points.c.geom, srid)).label('lat'),
         db.func.ST_X(db.func.ST_Transform(profile_points.c.geom, srid)).label('lng'),
-        profile_points.c.distance.label('distance'),
+        db.func.ST_Y(db.func.ST_Transform(profile_points.c.geom, srid)).label('lat'),
         db.func.ST_Z(profile_points.c.geom).label('elevation'),
+        profile_points.c.distance.label('distance'),
     )
     result = query.all()
     if result:

@@ -51,8 +51,8 @@ def get_elevation_profile(coords, srid=get_srid()):
         elevations = []
         for r in result:
             elevation = {
-                'lat': r['location']['lat'],
                 'lng': r['location']['lng'],
+                'lat': r['location']['lat'],
                 'elevation': r['elevation'],
                 'distance': functions.get_distance(coord_a, (r['location']['lat'], r['location']['lng'])),
             }
@@ -84,8 +84,8 @@ def get_elevation_profile_sampled(coords, srid=get_srid(), sample_dist=5):
         elevations = []
         for r in result:
             elevation = {
-                'lat': r['location']['lat'],
                 'lng': r['location']['lng'],
+                'lat': r['location']['lat'],
                 'elevation': r['elevation'],
                 'distance': functions.get_distance(coord_a, (r['location']['lat'], r['location']['lng'])),
             }
