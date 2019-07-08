@@ -8,6 +8,7 @@ requires = [
     'argparse',
     'googlemaps',
     'geojson',
+    'requests',
 ]
 
 setup(

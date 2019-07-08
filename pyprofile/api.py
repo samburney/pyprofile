@@ -47,7 +47,7 @@ def get_elevation():
 @bp.route('/profile/sampled', methods=('GET', 'POST'))
 @bp.route('/profile', methods=('GET', 'POST'))
 def get_profile():
-    srid = request.args.get('srid') or request.form.get('srid') or 4326
+    srid = int(request.args.get('srid') or request.form.get('srid') or 4326)
     lat1 = float(request.args.get('lat1') or request.form.get('lat1')) or None
     lng1 = float(request.args.get('lng1') or request.form.get('lng1')) or None
     lat2 = float(request.args.get('lat2') or request.form.get('lat2')) or None
@@ -92,6 +92,72 @@ def get_profile():
             'distance': backend.get_distance((lat1, lng1), (lat2, lng2), srid),
             'bearing': backend.get_bearing((lat1, lng1), (lat2, lng2), srid),
             'samples': len(results),
+        }
+    json_data = {'status': status, 'errors': errors, 'data': data}
+
+    return jsonify(json_data)
+
+
+# Get A to B distance
+@bp.route('/distance', methods=('GET', 'POST'))
+def get_distance():
+    srid = int(request.args.get('srid') or request.form.get('srid') or 4326)
+    lat1 = float(request.args.get('lat1') or request.form.get('lat1')) or None
+    lng1 = float(request.args.get('lng1') or request.form.get('lng1')) or None
+    lat2 = float(request.args.get('lat2') or request.form.get('lat2')) or None
+    lng2 = float(request.args.get('lng2') or request.form.get('lng2')) or None
+
+    backend_name = request.args.get('backend') or request.form.get(
+        'backend') or current_app.config['PYPROFILE_DEFAULT_BACKEND']
+
+    status = 'Error'
+    errors = []
+    data = None
+
+    # Get DEM backend
+    backends = functions.get_backends()
+    backend = backends[backend_name]
+
+    # Get distance from backend
+    result = backend.get_distance((lat1, lng1), (lat2, lng2), srid)
+    if result is not None:
+        status = 'OK'
+
+        data = {
+            'distance': result,
+        }
+    json_data = {'status': status, 'errors': errors, 'data': data}
+
+    return jsonify(json_data)
+
+
+# Get A to B bearing
+@bp.route('/bearing', methods=('GET', 'POST'))
+def get_bearing():
+    srid = int(request.args.get('srid') or request.form.get('srid') or 4326)
+    lat1 = float(request.args.get('lat1') or request.form.get('lat1')) or None
+    lng1 = float(request.args.get('lng1') or request.form.get('lng1')) or None
+    lat2 = float(request.args.get('lat2') or request.form.get('lat2')) or None
+    lng2 = float(request.args.get('lng2') or request.form.get('lng2')) or None
+
+    backend_name = request.args.get('backend') or request.form.get(
+        'backend') or current_app.config['PYPROFILE_DEFAULT_BACKEND']
+
+    status = 'Error'
+    errors = []
+    data = None
+
+    # Get DEM backend
+    backends = functions.get_backends()
+    backend = backends[backend_name]
+
+    # Get bearing from backend
+    result = backend.get_bearing((lat1, lng1), (lat2, lng2), srid)
+    if result is not None:
+        status = 'OK'
+
+        data = {
+            'bearing': result,
         }
     json_data = {'status': status, 'errors': errors, 'data': data}
 

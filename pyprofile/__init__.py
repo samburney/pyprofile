@@ -12,6 +12,7 @@ def create_app():
         DEBUG=True,
         SECRET_KEY=None,
         PYPROFILE_DEFAULT_BACKEND='postgis',
+        PYPROFILE_API_BACKEND='postgis',
     )
 
     # Load config file, if it exists
