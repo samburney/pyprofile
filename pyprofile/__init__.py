@@ -28,5 +28,9 @@ def create_app():
     from . import api
     app.register_blueprint(api.bp)
 
+    # Register blueprints
+    from . import view
+    app.register_blueprint(view.bp)
+
     # Return app factory
     return app

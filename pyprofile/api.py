@@ -44,8 +44,8 @@ def get_elevation():
 
 
 # Get A to B elevation profile
-@bp.route('/profile/sampled', methods=('GET', 'POST'))
 @bp.route('/profile', methods=('GET', 'POST'))
+@bp.route('/profile/unsampled', methods=('GET', 'POST'))
 def get_profile():
     srid = int(request.args.get('srid') or request.form.get('srid') or 4326)
     lat1 = float(request.args.get('lat1') or request.form.get('lat1')) or None
@@ -67,10 +67,10 @@ def get_profile():
 
     # Get elevation from backend
     results = None
-    if str(request.url_rule) == '/api/profile':
+    if str(request.url_rule) == '/api/profile/unsampled':
         results = backend.get_elevation_profile(
             ((lat1, lng1), (lat2, lng2)), srid)
-    elif str(request.url_rule) == '/api/profile/sampled':
+    elif str(request.url_rule) == '/api/profile':
         results = backend.get_elevation_profile_sampled(
             ((lat1, lng1), (lat2, lng2)), srid, sample_dist)
 
@@ -81,11 +81,12 @@ def get_profile():
         coordinate_distances = []
         for result in results:
             coordinates.append((
-                result.lng,
-                result.lat,
-                result.elevation,
+                result.lng or 0,
+                result.lat or 0,
+                result.elevation or 0,
             ))
             coordinate_distances.append(f'{result.distance:6f}')
+
         data = {
             'geojson': geojson.LineString(coordinates),
             'coordinate_distances': coordinate_distances,

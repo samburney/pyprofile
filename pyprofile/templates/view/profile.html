@@ -1,0 +1,24 @@
+<html>
+
+<head>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script type="text/javascript">
+        // Get request variables
+        var api_base = '{{request_data.api_base}}'
+        var backend = '{{request_data.backend}}'
+        var srid = '{{request_data.srid}}'
+        var lat1 = '{{request_data.lat1}}'
+        var lng1 = '{{request_data.lng1}}'
+        var lat2 = '{{request_data.lat2}}'
+        var lng2 = '{{request_data.lng2}}'
+        var sample_dist = '{{request_data.sample_dist}}'
+    </script>
+    <script type="text/javascript" src="{{url_for('static', filename='js/profile.js')}}"></script>
+</head>
+
+<body>
+    <div id="chart" style="height: 494px; width: 1482px;"></div>
+</body>
+
+</html>

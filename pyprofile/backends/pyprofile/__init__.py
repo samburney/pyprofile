@@ -63,9 +63,9 @@ def get_elevation_profile_sampled(coords, srid=get_srid(), sample_dist=5, unsamp
     coord_b = coords[-1]
 
     if unsampled is False:
-        request_url = f'{api_base}/profile/sampled'
-    elif unsampled is True:
         request_url = f'{api_base}/profile'
+    elif unsampled is True:
+        request_url = f'{api_base}/profile/unsampled'
 
     request_data = {
         'srid': srid,
@@ -73,6 +73,7 @@ def get_elevation_profile_sampled(coords, srid=get_srid(), sample_dist=5, unsamp
         'lng1': coord_a[1],
         'lat2': coord_b[0],
         'lng2': coord_b[1],
+        'sample_dist': sample_dist,
         'backend': api_backend,
     }
 
